@@ -100,7 +100,7 @@ export default function LoginPage() {
         </div>
 
         <p className="text-center text-white-dim/40 text-xs font-mono mt-6">
-          No public sign-up · Authorized access only
+          Authorized access only 
         </p>
       </div>
     </div>

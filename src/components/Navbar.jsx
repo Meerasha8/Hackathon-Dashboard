@@ -53,10 +53,6 @@ export default function Navbar() {
 
         {/* Right side */}
         <div className="flex items-center gap-3">
-          <Link to="/hackathons/new" className="btn-primary text-sm py-1.5">
-            <Plus size={14} />
-            <span className="hidden sm:inline">New Hackathon</span>
-          </Link>
 
           <div className="hidden sm:flex items-center gap-2 pl-3 border-l border-border">
             <div className="w-7 h-7 rounded-full bg-blue/20 border border-blue/30 flex items-center justify-center">
