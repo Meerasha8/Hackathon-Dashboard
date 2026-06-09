@@ -15,9 +15,9 @@ export function useHackathons(filterCompleted = false) {
       .select('*, phases(*)')
       .order('created_at', { ascending: false })
 
-    if (filterCompleted) {
+    if (filterCompleted === true) {
       query = query.eq('status', 'completed')
-    } else {
+    } else if (filterCompleted === false) {
       query = query.neq('status', 'completed')
     }
 

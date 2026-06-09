@@ -8,6 +8,7 @@ import DashboardPage from './pages/DashboardPage'
 import CompletedPage from './pages/CompletedPage'
 import CreateHackathonPage from './pages/CreateHackathonPage'
 import HackathonDetailPage from './pages/HackathonDetailPage'
+import CalendarPage from './pages/CalendarPage'
 
 function Layout({ children }) {
   return (
@@ -56,6 +57,11 @@ export default function App() {
           <Route path="/hackathons/:id" element={
             <ProtectedRoute>
               <Layout><HackathonDetailPage /></Layout>
+            </ProtectedRoute>
+          } />
+          <Route path="/calendar" element={
+            <ProtectedRoute>
+              <Layout><CalendarPage /></Layout>
             </ProtectedRoute>
           } />
           <Route path="*" element={<Navigate to="/" replace />} />

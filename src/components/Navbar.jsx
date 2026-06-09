@@ -1,6 +1,6 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { LogOut, Trophy, LayoutDashboard, Archive, Plus } from 'lucide-react'
+import { LogOut, Trophy, LayoutDashboard, Archive, Plus, CalendarDays } from 'lucide-react'
 import toast from 'react-hot-toast'
 
 export default function Navbar() {
@@ -16,6 +16,7 @@ export default function Navbar() {
 
   const navLinks = [
     { to: '/', label: 'Dashboard', icon: LayoutDashboard },
+    { to: '/calendar', label: 'Calendar', icon: CalendarDays },
     { to: '/completed', label: 'Completed', icon: Archive },
   ]
 
