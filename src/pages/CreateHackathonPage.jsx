@@ -54,6 +54,17 @@ export default function CreateHackathonPage() {
         })).filter(p => p.name.trim()),
       }
       const hack = await createHackathon(payload)
+      if (typeof pendo !== 'undefined') {
+        pendo.track('hackathon_created', {
+          hackathon_id: hack.id,
+          status: form.status,
+          has_deadline: Boolean(form.overall_deadline),
+          has_link: Boolean(form.link),
+          has_idea: Boolean(form.our_idea),
+          has_organizer: Boolean(form.organizer),
+          phases_count: payload.phases.length,
+        })
+      }
       toast.success('Hackathon created!')
       navigate(`/hackathons/${hack.id}`)
     } catch (err) {

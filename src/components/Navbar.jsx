@@ -9,6 +9,9 @@ export default function Navbar() {
   const navigate = useNavigate()
 
   const handleSignOut = async () => {
+    if (typeof pendo !== 'undefined') {
+      pendo.track('user_signed_out')
+    }
     await signOut()
     toast.success('Signed out')
     navigate('/login')

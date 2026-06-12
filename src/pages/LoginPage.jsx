@@ -19,6 +19,12 @@ export default function LoginPage() {
     if (error) {
       toast.error(error.message || 'Invalid credentials')
     } else {
+      if (typeof pendo !== 'undefined') {
+        pendo.track('user_signed_in', {
+          auth_method: 'email_password',
+          success: true,
+        })
+      }
       toast.success('Welcome back!')
       navigate('/')
     }
