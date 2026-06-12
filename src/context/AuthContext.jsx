@@ -1,3 +1,4 @@
+/* global pendo */
 import { createContext, useContext, useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
 
@@ -9,12 +10,40 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null)
+      const currentUser = session?.user ?? null
+      setUser(currentUser)
+      if (currentUser) {
+        pendo.identify({
+          visitor: {
+            id: currentUser.id,
+            email: currentUser.email,
+            createdAt: currentUser.created_at,
+            lastSignInAt: currentUser.last_sign_in_at,
+            role: currentUser.role,
+            emailConfirmedAt: currentUser.email_confirmed_at,
+            isAnonymous: currentUser.is_anonymous
+          }
+        })
+      }
       setLoading(false)
     })
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null)
+      const currentUser = session?.user ?? null
+      setUser(currentUser)
+      if (currentUser) {
+        pendo.identify({
+          visitor: {
+            id: currentUser.id,
+            email: currentUser.email,
+            createdAt: currentUser.created_at,
+            lastSignInAt: currentUser.last_sign_in_at,
+            role: currentUser.role,
+            emailConfirmedAt: currentUser.email_confirmed_at,
+            isAnonymous: currentUser.is_anonymous
+          }
+        })
+      }
     })
 
     return () => subscription.unsubscribe()
@@ -27,6 +56,7 @@ export function AuthProvider({ children }) {
 
   const signOut = async () => {
     await supabase.auth.signOut()
+    pendo.clearSession()
   }
 
   return (
