@@ -48,10 +48,29 @@ export default function HackathonDetailPage() {
     if (!infoForm.name.trim()) return toast.error('Name is required')
     setSaving(true)
     try {
+      const previousStatus = hackathon.status
       await updateHackathon(id, {
         ...infoForm,
         overall_deadline: infoForm.overall_deadline ? new Date(infoForm.overall_deadline).toISOString() : null,
       })
+      if (typeof pendo !== 'undefined') {
+        pendo.track('hackathon_updated', {
+          hackathon_id: id,
+          status: infoForm.status,
+          previous_status: previousStatus,
+          has_deadline: Boolean(infoForm.overall_deadline),
+          has_link: Boolean(infoForm.link),
+          has_idea: Boolean(infoForm.our_idea),
+        })
+        if (previousStatus !== infoForm.status) {
+          pendo.track('hackathon_status_changed', {
+            hackathon_id: id,
+            hackathon_name: infoForm.name,
+            previous_status: previousStatus,
+            new_status: infoForm.status,
+          })
+        }
+      }
       toast.success('Hackathon updated')
       setEditingInfo(false)
       refetch()
@@ -65,6 +84,14 @@ export default function HackathonDetailPage() {
     if (!confirm(`Permanently delete "${hackathon.name}"? This cannot be undone.`)) return
     try {
       await deleteHackathon(id)
+      if (typeof pendo !== 'undefined') {
+        pendo.track('hackathon_deleted', {
+          hackathon_id: id,
+          hackathon_name: hackathon.name,
+          hackathon_status: hackathon.status,
+          phases_count: phases.length,
+        })
+      }
       toast.success('Hackathon deleted')
       navigate('/')
     } catch (e) {
@@ -78,6 +105,16 @@ export default function HackathonDetailPage() {
         ...data,
         deadline: data.deadline ? new Date(data.deadline).toISOString() : null,
       }, phases.length)
+      if (typeof pendo !== 'undefined') {
+        pendo.track('phase_added', {
+          hackathon_id: id,
+          phase_name: data.name,
+          has_deadline: Boolean(data.deadline),
+          has_description: Boolean(data.description),
+          has_submission_req: Boolean(data.what_to_submit),
+          total_phases_after_add: phases.length + 1,
+        })
+      }
       toast.success('Phase added')
       setAddingPhase(false)
       refetch()

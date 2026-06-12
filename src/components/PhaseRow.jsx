@@ -17,6 +17,14 @@ export default function PhaseRow({ phase, index, onRefetch }) {
     setToggling(true)
     try {
       await togglePhaseComplete(phase.id, phase.is_completed)
+      if (typeof pendo !== 'undefined') {
+        pendo.track('phase_completion_toggled', {
+          phase_id: phase.id,
+          hackathon_id: phase.hackathon_id,
+          phase_name: phase.name,
+          new_is_completed: !phase.is_completed,
+        })
+      }
       toast.success(phase.is_completed ? 'Phase marked pending' : 'Phase marked complete!')
       onRefetch()
     } catch (e) {
@@ -31,6 +39,15 @@ export default function PhaseRow({ phase, index, onRefetch }) {
         ...data,
         deadline: data.deadline ? new Date(data.deadline).toISOString() : null,
       })
+      if (typeof pendo !== 'undefined') {
+        pendo.track('phase_updated', {
+          phase_id: phase.id,
+          hackathon_id: phase.hackathon_id,
+          phase_name: data.name,
+          has_deadline: Boolean(data.deadline),
+          is_completed: data.is_completed,
+        })
+      }
       toast.success('Phase updated')
       setEditing(false)
       onRefetch()
@@ -43,6 +60,14 @@ export default function PhaseRow({ phase, index, onRefetch }) {
     if (!confirm(`Delete phase "${phase.name}"?`)) return
     try {
       await deletePhase(phase.id)
+      if (typeof pendo !== 'undefined') {
+        pendo.track('phase_deleted', {
+          phase_id: phase.id,
+          hackathon_id: phase.hackathon_id,
+          phase_name: phase.name,
+          was_completed: phase.is_completed,
+        })
+      }
       toast.success('Phase deleted')
       onRefetch()
     } catch (e) {
